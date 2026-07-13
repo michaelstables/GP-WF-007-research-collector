@@ -1,0 +1,319 @@
+{
+  "name": "Research Collector",
+  "description": "Organize saved links, snippets, and rough research notes into a practical research brief.",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "65993c45-121f-4376-96ee-2caaf1392bc1",
+      "name": "Manual Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "workflow_code_ecf5200c",
+              "name": "workflow_code",
+              "value": "GP-WF-007",
+              "type": "string"
+            },
+            {
+              "id": "workflow_name_30573d47",
+              "name": "workflow_name",
+              "value": "Research Collector",
+              "type": "string"
+            },
+            {
+              "id": "workflow_goal_d767ae17",
+              "name": "workflow_goal",
+              "value": "Organize saved URLs, snippets, and rough notes into a research brief with sources, themes, uncertainties, follow-up questions, and next actions.",
+              "type": "string"
+            },
+            {
+              "id": "research_topic_f59be025",
+              "name": "research_topic",
+              "value": "Beginner-friendly local AI workflow stack",
+              "type": "string"
+            },
+            {
+              "id": "research_goal_464122c9",
+              "name": "research_goal",
+              "value": "Compare beginner-friendly tools for building local-first AI workflows and decide what deserves deeper testing.",
+              "type": "string"
+            },
+            {
+              "id": "target_audience_b96cc615",
+              "name": "target_audience",
+              "value": "Creators and small business owners learning practical AI workflows",
+              "type": "string"
+            },
+            {
+              "id": "saved_items_e29aba3b",
+              "name": "saved_items",
+              "value": "https://docs.n8n.io - n8n documentation. Note: useful for automation workflows and connecting tools.\nhttps://ollama.com - local model runner. Note: useful for running models locally without sending every task to a cloud tool.\nhttps://obsidian.md - local Markdown knowledge base. Note: useful as a destination for research notes and reusable workflow documentation.\nPersonal note: compare tools based on beginner setup effort, privacy, recurring usefulness, and whether they work well together.",
+              "type": "string"
+            },
+            {
+              "id": "source_handling_922b4193",
+              "name": "source_handling",
+              "value": "Treat URLs as references only. Only summarize notes or excerpts that are pasted into saved_items.",
+              "type": "string"
+            },
+            {
+              "id": "knowledge_base_destination_84d2efe8",
+              "name": "knowledge_base_destination",
+              "value": "Markdown research note for Obsidian or Google Docs",
+              "type": "string"
+            },
+            {
+              "id": "preferred_tags_89550d3f",
+              "name": "preferred_tags",
+              "value": "local-ai, n8n, ollama, obsidian, workflow-research",
+              "type": "string"
+            },
+            {
+              "id": "must_not_do_10b94c3a",
+              "name": "must_not_do",
+              "value": "Do not pretend you opened the URLs. Do not invent facts from the domains. Flag anything that needs verification.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "03b1df7e-6de5-4c03-b55b-689887a81f0e",
+      "name": "Set Workflow Inputs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = { ...$json };\n\nconst prompt = [\n  'You are a research organization assistant.',\n  '',\n  'Workflow: GP-WF-007 - Research Collector',\n  'Problem it solves: Useful links and rough notes get scattered before they become usable research.',\n  'Main task: Turn saved URLs, snippets, and rough notes into an organized research brief.',\n  '',\n  'Important limitation:',\n  '- You cannot browse or fetch the URLs in this workflow.',\n  '- Treat URLs as source references only unless the user pasted notes or excerpts about them.',\n  '- Do not invent facts from a URL title or domain.',\n  '- Separate pasted facts from assumptions and follow-up questions.',\n  '',\n  'Input data:',\n  JSON.stringify(input, null, 2),\n  '',\n  'Research organization rules:',\n  '- Preserve every URL or source reference provided by the user.',\n  '- Summarize only the notes, snippets, or context that were actually provided.',\n  '- Clearly label uncertain points and missing context.',\n  '- Group research by theme when possible.',\n  '- Create practical next actions that help the user continue the research.',\n  '- Keep the tone clear, useful, and non-salesy.',\n  '',\n  'Return ONLY valid JSON in this exact shape:',\n  '{',\n  '  \"document_title\": \"Short research brief title\",',\n  '  \"summary\": \"Plain-English summary of what this research collection contains.\",',\n  '  \"research_topic\": \"Topic being researched\",',\n  '  \"source_list\": [',\n  '    {',\n  '      \"source\": \"URL, title, or source label\",',\n  '      \"provided_context\": \"What the user provided about this source\",',\n  '      \"source_type\": \"url, note, excerpt, idea, or unknown\",',\n  '      \"verification_needed\": \"What should be checked before relying on this source\"',\n  '    }',\n  '  ],',\n  '  \"key_findings\": [\"Finding grounded in the provided notes\"],',\n  '  \"themes\": [',\n  '    {',\n  '      \"theme\": \"Theme name\",',\n  '      \"notes\": [\"Relevant note\"],',\n  '      \"why_it_matters\": \"Why this theme matters to the research goal\"',\n  '    }',\n  '  ],',\n  '  \"assumptions_or_uncertainties\": [\"Thing that is not confirmed yet\"],',\n  '  \"follow_up_questions\": [\"Question to answer next\"],',\n  '  \"recommended_next_actions\": [\"Practical next action\"],',\n  '  \"knowledge_base_tags\": [\"tag-one\", \"tag-two\"],',\n  '  \"review_note\": \"Short human review reminder.\"',\n  '}',\n  '',\n  'Final reminder: output JSON only. No Markdown fence. No explanation before or after the JSON.'\n].join('\\n');\n\nreturn [{ json: { ...input, prompt } }];\n"
+      },
+      "id": "246e6695-5ac8-450c-a291-7c29ba38af9d",
+      "name": "Build AI Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "batching": {}
+      },
+      "id": "5153c2df-6ebc-4949-9085-de52aded1630",
+      "name": "Generate With AI",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "model": "llama3.1:8b",
+        "options": {
+          "temperature": 0.1,
+          "format": "json"
+        }
+      },
+      "id": "596838eb-37de-4827-b600-a5f80a33c15a",
+      "name": "Local Ollama Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        800,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $input.first().json;\n\nfunction extractJson(value) {\n  if (value && typeof value === 'object' && (value.source_list || value.key_findings || value.document_title)) {\n    return value;\n  }\n\n  const raw = String(value?.response || value?.text || value?.output || value?.result || value?.message?.content || '').trim();\n  if (!raw) throw new Error('AI did not return text or structured JSON.');\n\n  const cleaned = raw\n    .replace(/^```[a-zA-Z]*\\n?/, '')\n    .replace(/```$/, '')\n    .trim();\n\n  try {\n    return JSON.parse(cleaned);\n  } catch (_) {\n    const firstBrace = cleaned.indexOf('{');\n    const lastBrace = cleaned.lastIndexOf('}');\n    if (firstBrace >= 0 && lastBrace > firstBrace) {\n      return JSON.parse(cleaned.slice(firstBrace, lastBrace + 1));\n    }\n  }\n\n  throw new Error('AI did not return usable JSON. Rerun the workflow or use a model that supports JSON output.');\n}\n\nfunction asList(value, fallback) {\n  if (Array.isArray(value)) {\n    const cleaned = value.map((item) => String(item).trim()).filter(Boolean);\n    if (cleaned.length) return cleaned;\n  }\n  if (typeof value === 'string' && value.trim()) {\n    return value.split('\\n').map((item) => item.replace(/^[-*]\\s*/, '').trim()).filter(Boolean);\n  }\n  return fallback;\n}\n\nfunction bulletList(items) {\n  return asList(items, ['None added.']).map((item) => '- ' + item).join('\\n');\n}\n\nfunction sourceMarkdown(sources) {\n  if (!Array.isArray(sources) || sources.length === 0) return '- No sources were extracted.';\n  return sources.map((source, index) => {\n    if (typeof source === 'string') return `${index + 1}. ${source}`;\n    return [\n      `${index + 1}. **${String(source.source || 'Unlabeled source').trim()}**`,\n      `   - Type: ${String(source.source_type || 'unknown').trim()}`,\n      `   - Provided context: ${String(source.provided_context || 'No context provided.').trim()}`,\n      `   - Verification needed: ${String(source.verification_needed || 'Verify before relying on this source.').trim()}`\n    ].join('\\n');\n  }).join('\\n');\n}\n\nfunction themeMarkdown(themes) {\n  if (!Array.isArray(themes) || themes.length === 0) return '- No themes were extracted.';\n  return themes.map((theme) => {\n    if (typeof theme === 'string') return `### ${theme}\\n- No notes added.`;\n    return [\n      `### ${String(theme.theme || 'Untitled Theme').trim()}`,\n      bulletList(theme.notes || ['No notes added.']),\n      '',\n      `**Why it matters:** ${String(theme.why_it_matters || 'Review this theme against the research goal.').trim()}`\n    ].join('\\n');\n  }).join('\\n\\n');\n}\n\nconst parsed = extractJson(item);\nconst sourceList = Array.isArray(parsed.source_list) ? parsed.source_list : [];\nconst keyFindings = asList(parsed.key_findings, ['Review the provided notes and add confirmed findings.']);\nconst assumptions = asList(parsed.assumptions_or_uncertainties, ['Any source content not pasted into this workflow still needs verification.']);\nconst followUpQuestions = asList(parsed.follow_up_questions, ['What source should be reviewed next?']);\nconst nextActions = asList(parsed.recommended_next_actions || parsed.next_steps, ['Open and verify each saved source.', 'Add excerpts or notes from the strongest sources.', 'Turn confirmed findings into a draft or decision brief.']);\nwhile (nextActions.length < 3) {\n  const fillIns = ['Open and verify each saved source.', 'Add excerpts or notes from the strongest sources.', 'Turn confirmed findings into a draft or decision brief.'];\n  const next = fillIns.find((item) => !nextActions.includes(item));\n  if (!next) break;\n  nextActions.push(next);\n}\nconst tags = asList(parsed.knowledge_base_tags, ['research', 'source-review']);\n\nconst markdown = [\n  '## Research Topic',\n  String(parsed.research_topic || 'Untitled research topic').trim(),\n  '',\n  '## Source List',\n  sourceMarkdown(sourceList),\n  '',\n  '## Key Findings',\n  bulletList(keyFindings),\n  '',\n  '## Themes',\n  themeMarkdown(parsed.themes),\n  '',\n  '## Assumptions or Uncertainties',\n  bulletList(assumptions),\n  '',\n  '## Follow-Up Questions',\n  bulletList(followUpQuestions),\n  '',\n  '## Knowledge Base Tags',\n  tags.map((tag) => `#${String(tag).replace(/^#/, '').replace(/\\s+/g, '-').toLowerCase()}`).join(' ')\n].join('\\n');\n\nreturn [{\n  json: {\n    workflow_name: 'GP-WF-007 - Research Collector',\n    created_at: new Date().toISOString(),\n    document_title: String(parsed.document_title || 'Research Collection Brief').trim(),\n    summary: String(parsed.summary || 'Organized saved sources and notes into a research brief.').trim(),\n    output_markdown: markdown,\n    source_count: sourceList.length,\n    key_findings: keyFindings,\n    assumptions_or_uncertainties: assumptions,\n    follow_up_questions: followUpQuestions,\n    next_steps: nextActions,\n    knowledge_base_tags: tags,\n    review_note: String(parsed.review_note || 'Verify source content before treating this research brief as complete.').trim()\n  }\n}];\n"
+      },
+      "id": "6222d827-65b7-4f20-bb2e-70bf6610fca4",
+      "name": "Review AI Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const today = new Date();\nconst date = today.toISOString().slice(0, 10);\nconst nextSteps = Array.isArray($json.next_steps) ? $json.next_steps : [];\n\nconst body = [\n  `# ${$json.document_title || 'Research Collection Brief'}`,\n  '',\n  `Created: ${date}`,\n  'Workflow: GP-WF-007 - Research Collector',\n  '',\n  '## Summary',\n  $json.summary || 'No summary returned.',\n  '',\n  $json.output_markdown || '',\n  '',\n  '## Recommended Next Actions',\n  ...(nextSteps.length ? nextSteps.map((step) => `- ${step}`) : ['- Verify each source and add missing context.']),\n  '',\n  '## Human Review Note',\n  $json.review_note || 'Verify sources before using this research brief.',\n  '',\n  'Source: GetPrompting Free Workflow Library'\n].join('\\n');\n\nreturn [{\n  json: {\n    ...$json,\n    document_title: `GP-WF-007 - Research Collector - ${date}`,\n    document_body: body\n  }\n}];\n"
+      },
+      "id": "ba3a2b1a-20e6-44f4-b4d2-8cf71914d14e",
+      "name": "Prepare Google Doc",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "document",
+        "operation": "create",
+        "driveId": "myDrive",
+        "folderId": "default",
+        "title": "={{ $json.document_title }}"
+      },
+      "id": "bc4ea641-e38c-4913-b603-5428624c823f",
+      "name": "Create Google Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "document",
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "simple": true,
+        "actionsUi": {
+          "actionFields": [
+            {
+              "object": "text",
+              "action": "insert",
+              "insertSegment": "body",
+              "locationChoice": "endOfSegmentLocation",
+              "text": "={{ $node[\"Prepare Google Doc\"].json.document_body }}"
+            }
+          ]
+        },
+        "updateFields": {}
+      },
+      "id": "37a6cb4b-f9b5-4d17-9d2b-1e801b084bfc",
+      "name": "Write Google Doc",
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1860,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Start": {
+      "main": [
+        [
+          {
+            "node": "Set Workflow Inputs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Workflow Inputs": {
+      "main": [
+        [
+          {
+            "node": "Build AI Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build AI Prompt": {
+      "main": [
+        [
+          {
+            "node": "Generate With AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Local Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate With AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate With AI": {
+      "main": [
+        [
+          {
+            "node": "Review AI Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review AI Output": {
+      "main": [
+        [
+          {
+            "node": "Prepare Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Google Doc": {
+      "main": [
+        [
+          {
+            "node": "Create Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Google Doc": {
+      "main": [
+        [
+          {
+            "node": "Write Google Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "tags": [
+    "getprompting",
+    "free-workflow-library",
+    "gp-wf-007"
+  ]
+}
